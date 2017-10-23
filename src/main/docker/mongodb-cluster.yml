@@ -1,0 +1,16 @@
+version: '2'
+services:
+    pulsegateway-mongodb:
+        image: mongo:3.4.8
+        ports:
+            - "27017:27017"
+        command: mongos --configdb pulsegateway-mongodb-config
+    pulsegateway-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    pulsegateway-mongodb-config:
+        image: mongo:3.4.8
+        container_name: pulsegateway-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
